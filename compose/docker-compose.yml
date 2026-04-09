@@ -1,0 +1,66 @@
+name: EclipseBar
+
+version: "3.9"
+
+services:
+  # Servicio del frontend (React)
+  frontend:
+    build: ../../FR-EB-RT
+    container_name: eb-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - postgres
+  # Microservicios de autenticación
+  auth:
+    build:
+      context: ../../MS-AUTH-PY
+      dockerfile: Dockerfile
+    container_name: eb-auth
+    ports:
+      - "8001:8001"
+    depends_on:
+      - postgres
+  # Microservicios de usuario
+  user:
+    build:
+      context: ../../MS-USER-PY
+      dockerfile: Dockerfile
+    container_name: eb-user
+    ports:
+      - "8002:8002"
+    depends_on:
+      - postgres
+  # Microservicios de productos
+  product:
+    build:
+      context: ../../MS-PRODUCT-PY
+      dockerfile: Dockerfile
+    container_name: eb-product
+    ports:
+      - "8003:8003"
+    depends_on:
+      - postgres
+  # Microservicios de inventario
+  inventory:
+    build:
+      context: ../../MS-INVENTORY-PY
+      dockerfile: Dockerfile
+    container_name: eb-inventory
+    ports:
+      - "8004:8004"
+    depends_on:
+      - postgres
+  # Base de datos PostgreSQL
+  postgres:
+    image: postgres:15
+    container_name: eb-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: eclipsebar_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../database:/docker-entrypoint-initdb.d
