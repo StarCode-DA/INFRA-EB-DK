@@ -72,6 +72,18 @@ CREATE TABLE inventory (
     UNIQUE (product_id, sede_id)
 );
 
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY, 
+    usuario_id INT NOT NULL REFERENCES usuarios(id),
+    sede_id INT NOT NULL REFERENCES sedes(id),
+    status VARCHAR(20) NOT NULL DEFAULT 'ABIERTO',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    nombre_cliente VARCHAR(100),
+    cedula_cliente VARCHAR(20),
+    nombre_usuario VARCHAR(100),
+    CONSTRAINT check_status 
+    CHECK (status IN ('ABIERTO', 'CERRADO'))
+);
 -- =============================================
 -- ÍNDICES
 -- =============================================
@@ -85,6 +97,10 @@ CREATE INDEX idx_products_nombre ON products(nombre);
 CREATE INDEX idx_products_categoria ON products(categoria);
 CREATE INDEX idx_inventory_sede ON inventory(sede_id);
 CREATE INDEX idx_inventory_product ON inventory(product_id);
+
+CREATE INDEX idx_orders_sede ON orders(sede_id);
+CREATE INDEX idx_orders_status ON orders(status);
+CREATE INDEX idx_orders_created_at ON orders(created_at);
 
 -- =============================================
 -- INSERTS DE PRUEBA
@@ -114,6 +130,7 @@ INSERT INTO meseros (usuario_id, nombre, telefono, sede_id) VALUES
 INSERT INTO cajeros (usuario_id, nombre, telefono, sede_id) VALUES
   (3, 'Pablo Gomez Cajero', '3207654321', 2);
 
+-- productos
 INSERT INTO products (nombre, unidad, categoria, costo, precio) VALUES
 ('Corona Extra', '330 ml', 'Liquor', 2500, 5000),
 ('Coca Cola', '600 ml', 'Drinks', 1800, 3500),
@@ -123,3 +140,5 @@ INSERT INTO products (nombre, unidad, categoria, costo, precio) VALUES
 ('Whisky Old Parr', '500 ml', 'Liquor', 60000, 90000),
 ('Ron Medellín', '750 ml', 'Liquor', 30000, 55000),
 ('Water Cielo', '300 ml', 'Drinks', 1000, 2500);
+
+
