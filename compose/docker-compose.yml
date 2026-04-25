@@ -51,6 +51,16 @@ services:
       - "8004:8004"
     depends_on:
       - postgres
+  # Microservicios de pedidos
+  order:
+    build:
+      context: ../../MS-ORDER-PY
+      dockerfile: Dockerfile
+    container_name: eb-order
+    ports:
+      - "8005:8005"
+    depends_on:
+      - postgres
   # Base de datos PostgreSQL
   postgres:
     image: postgres:15
