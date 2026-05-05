@@ -72,6 +72,7 @@ CREATE TABLE inventory (
     UNIQUE (product_id, sede_id)
 );
 
+-- Tabla de pedidos
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY, 
     usuario_id INT NOT NULL REFERENCES usuarios(id),
@@ -97,7 +98,6 @@ CREATE INDEX idx_products_nombre ON products(nombre);
 CREATE INDEX idx_products_categoria ON products(categoria);
 CREATE INDEX idx_inventory_sede ON inventory(sede_id);
 CREATE INDEX idx_inventory_product ON inventory(product_id);
-
 CREATE INDEX idx_orders_sede ON orders(sede_id);
 CREATE INDEX idx_orders_status ON orders(status);
 CREATE INDEX idx_orders_created_at ON orders(created_at);
